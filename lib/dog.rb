@@ -1,3 +1,5 @@
+require 'pry'
+
 class Dog 
 
   attr_accessor :name, :breed 
@@ -71,12 +73,38 @@ class Dog
     dog
   end
 
-  def self.find_or_create_by(attribute)
-    
-  end
+
+  def self.find_or_create_by(hash)
+    result = DB[:conn].execute("SELECT * FROM dogs WHERE name = ? AND breed = ?", hash[:name], hash[:breed]) #array of arrays [ [] ]
+    row = result[0]
+    if !result.empty?
+        dog = self.new(id: row[0], name: row[1], breed: row[2])
+        dog.update
+    else
+      dog = self.create(hash)
+    end
+    dog
+
+    # row = DB[:conn].execute("SELECT * FROM dogs WHERE name = ? AND breed = ?", hash[:name], hash[:breed])[0]
+    # if !row.empty?
+    #     dog = self.new(id: row[0], name: row[1], breed: row[2])
+    #     dog.update
+    # else
+    #   dog = self.create(hash)
+    # end
+    # dog
+  end 
 
   def update
-    
+    sql = "UPDATE dogs SET name = ?, breed = ? WHERE id = ?"
+    DB[:conn].execute(sql, self.name, self.breed, self.id)
+  end
+
+  def self.new_from_db(row)
+    hash = {id: row[0], name: row[1], breed: row[2]}
+    dog = self.create(hash)
+    dog
   end
 
 end
+
