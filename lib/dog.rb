@@ -85,14 +85,6 @@ class Dog
     end
     dog
 
-    # row = DB[:conn].execute("SELECT * FROM dogs WHERE name = ? AND breed = ?", hash[:name], hash[:breed])[0]
-    # if !row.empty?
-    #     dog = self.new(id: row[0], name: row[1], breed: row[2])
-    #     dog.update
-    # else
-    #   dog = self.create(hash)
-    # end
-    # dog
   end 
 
   def update
